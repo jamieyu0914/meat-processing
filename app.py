@@ -29,12 +29,15 @@ def modify_resource(resource_type, resource_index):
     
     lock_index = resource_index % 5
     lock = locks[lock_index]
-      
+
+    handlers = {0: 'A', 1: 'B', 2: 'C', 3: 'D', 4: 'E'}
+    handler = handlers.get(lock_index)
+
     # 獲取互斥鎖
     lock.acquire()
     current_datetime = datetime.now()
     current_formatted_datetime = current_datetime.strftime('%Y-%m-%d %H:%M:%S')
-    print(f"{current_formatted_datetime} 取得 {resource_type}.")
+    print(f"{handler} 在 {current_formatted_datetime} 取得{meat_type}")
 
     # 模擬鎖的等待時間
     time.sleep(wait_time)
@@ -46,7 +49,7 @@ def modify_resource(resource_type, resource_index):
     lock.release()
     current_datetime = datetime.now()
     current_formatted_datetime = current_datetime.strftime('%Y-%m-%d %H:%M:%S')
-    print(f"{current_formatted_datetime} 處理完 {resource_type}.")
+    print(f"{handler} 在 {current_formatted_datetime} 處理完{meat_type}")
 
 # 創建多個執行緒來挪動共享資源
 threads = []
@@ -63,6 +66,7 @@ for i in range(5):  # 雞肉 共享資源
     threads.append(thread)
 
 # 先建立執行緒，以開始動作
+print("肉品已進貨，加工處理開始...")
 for thread in threads:
     thread.start()
 
@@ -70,4 +74,4 @@ for thread in threads:
 for thread in threads:
     thread.join()
 
-print("All threads have finished.")
+print("所有肉品進貨處理完畢，收工.")
