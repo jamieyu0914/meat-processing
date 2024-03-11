@@ -1,4 +1,7 @@
+from datetime import datetime
+
 import threading
+import time
 
 
 # 定義22個資源, 將各代表一種肉品
@@ -13,18 +16,37 @@ locks = [threading.Lock() for _ in range(5)]
 
 # 定義一個函數來分配資源
 def modify_resource(resource_type, resource_index):
+
+    if resource_type == 'beef':
+        meat_type = '牛肉'
+        wait_time = 3
+    elif resource_type == 'pork':
+        meat_type = '豬肉'
+        wait_time = 2
+    else: # 雞肉
+        meat_type = '雞肉'
+        wait_time = 1
     
     lock_index = resource_index % 5
     lock = locks[lock_index]
       
     # 獲取互斥鎖
     lock.acquire()
+    current_datetime = datetime.now()
+    current_formatted_datetime = current_datetime.strftime('%Y-%m-%d %H:%M:%S')
+    print(f"{current_formatted_datetime} 取得 {resource_type}.")
+
+    # 模擬鎖的等待時間
+    time.sleep(wait_time)
 
     # 進行資源挪動
     resources[resource_type][resource_index] += 1
     
     # 釋放互斥鎖
     lock.release()
+    current_datetime = datetime.now()
+    current_formatted_datetime = current_datetime.strftime('%Y-%m-%d %H:%M:%S')
+    print(f"{current_formatted_datetime} 處理完 {resource_type}.")
 
 # 創建多個執行緒來挪動共享資源
 threads = []
